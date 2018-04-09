@@ -30,7 +30,11 @@ The following URLs provides entrypoints into the HATEOAS "self-documenting" API
   curl -H 'Accept:application/json' http://localhost:8087/api/reservations
 ```
 
+When a reservation request would exceed capacity of the first block, the response contains "We are already at capacity of <N>" with HTTP response code of 206 (this code needs changing)
+
 ### Resources
+
+Resource field keys in JSON are currently camelCase.  A to-do is creating OpenAPI/Swagger "live" documentation that generates a JSON schema for the RESTful resources
 
 **Blocks**: a set of reservable units (rooms).   Currently, only one block is supported and all reservations are assumed to be for that block.
 * `Capacity` is the physical number of reservable units
@@ -51,7 +55,7 @@ Required software includes git, Java 8, and docker.  Dependencies will be downlo
 
 IP ports 8087 and 5432 (postgres) need to be available on the host.
 
-Clone the github...benjaminisi/keyprx (or download zip) 0and cd into the checkout directory
+Clone benjaminisi/keyprx from github.com (or download the zip) and cd into the checkout directory
 ```bash
 git clone https://github.com/benjaminisi/keyprx.git
 # or using ssh
@@ -59,15 +63,19 @@ git clone git@github.com:benjaminisi/keyprx.git
 ```
 Or in a container using the included Dockerfile.  Have localhost port 8087 available or specify a different port mapping in docker/docker-compose.yml
 ```bash
+# move to the checkout directory
 cd keyprx
+# build the has-everything jar file.  This file is accessed from the ./build/libs each time the container starts to facilitate development
 bash ./gradlew build
 cd docker
 docker build -t keyprx:latest .
 cd ..
-# using the checkout directory is the 'context' for docker-compose so it has access the the jar file in build/libs
+# this uses the current (checkout) directory as the 'context' for docker-compose so it has access the the jar file in build/libs
 docker-compose -f docker/docker-compose.yml up
-# and in another shell
-curl http://localhost:8087/api/...
+# and in another shell, run my simple set of requests and look for "We are already at capacity of"
+bash docker/functionaltest.sh
+# or roll your own.  See section API above.  This request gives a HATEOAS response enumerating the available REST endpoints
+curl http://localhost:8087/api/
 ```
 For a real-world application, containers for each "concern" would be separate and networked together.  For example, the database and the Java application would each be in their own container.  Persistent storage for the database would also best be externalized, if not using an entirely managed cloud database such as Amazon Aurora or RDS.
 
@@ -101,6 +109,8 @@ Checking that a requested reservation does not exceed capacity is done as follow
 This algorithm can be optimized in many imaginable ways.   Optimization should be driven by experience.  For example, are there many more inquiries than changes to reservations?  Is it really common to be near capacity?  Do we need to support multiple servers for high availability or scale out?
 
 ## Future directions
+
+* Return a better response code than 206 when the reservation request exceeds capacity.  The response does include "We are already at capacity of 4"
 
 * Externalize configuration such as Postgres user/password and db name
 
