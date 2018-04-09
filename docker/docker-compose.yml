@@ -19,8 +19,8 @@ services:
   keypr:
     # replace username/repo:tag with your name and image details
     image: keyprx:latest
-    build: .
-    env_file: postgres_env.properties
+    # build: .
+    # env_file: postgres_env.properties
 #    deploy:
 #      replicas: 1
 #      resources:
@@ -32,7 +32,7 @@ services:
     ports:
       - "8087:8080"
     volumes:
-      - "/Users/david/IdeaProjects:/home/david/IdeaProjects"
+      - ${PWD}:/home/keyprx/IdeaProjects/keyprx
     depends_on:
       - db
     networks:

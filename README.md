@@ -49,6 +49,8 @@ Times are "unix epoch milliseconds" in UTC.   It is up to the front-end app to a
 
 Required software includes git, Java 8, and docker.  Dependencies will be downloaded by the build.
 
+IP ports 8087 and 5432 (postgres) need to be available on the host.
+
 Clone the github...benjaminisi/keyprx (or download zip) 0and cd into the checkout directory
 ```bash
 git clone https://github.com/benjaminisi/keyprx.git
@@ -61,7 +63,9 @@ cd keyprx
 bash ./gradlew build
 cd docker
 docker build -t keyprx:latest .
-docker-compose up
+cd ..
+# using the checkout directory is the 'context' for docker-compose so it has access the the jar file in build/libs
+docker-compose -f docker/docker-compose.yml up
 # and in another shell
 curl http://localhost:8087/api/...
 ```

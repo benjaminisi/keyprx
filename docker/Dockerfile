@@ -1,3 +1,4 @@
+
 FROM openjdk:8-jdk-alpine
 
 # Choose a base image that has Java 8 and PostgreSQL
@@ -5,11 +6,10 @@ FROM openjdk:8-jdk-alpine
 
 ENV POSTGRESQL_USER=postgres POSTGRESQL_PASSWORD=postgres POSTGRESQL_DATABASE=keyprx
 
-VOLUME /home/david/IdeaProjects
+VOLUME /home/keyprx/IdeaProjects/keyprx
 
-WORKDIR /home/david/IdeaProjects/keyprx/target
+WORKDIR /home/keyprx/IdeaProjects/keyprx
 
-CMD ["/usr/bin/java", "-jar", "/home/david/IdeaProjects/keyprx/build/libs/keyprx-1.0.0.jar"]
+CMD ["/usr/bin/java", "-jar", "/home/keyprx/IdeaProjects/keyprx/build/libs/keyprx-1.0.0.jar"]
 
 EXPOSE 8080
-
