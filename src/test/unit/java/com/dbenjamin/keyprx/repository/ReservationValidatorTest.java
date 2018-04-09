@@ -40,11 +40,13 @@ public class ReservationValidatorTest {
 
     private Reservation reservation1 = new Reservation();
 
+    ArrayList<Reservation> reservations;
+
     @Before
     public void setUp() {
         Block hotelDavid = new Block();
         hotelDavid.setName("Hotel David");
-        hotelDavid.setCapacity(1);
+        hotelDavid.setCapacity(2);
         hotelDavid.setOverbookPercent(0);
 
         ArrayList<Block> blocks = new ArrayList<>();
@@ -58,7 +60,7 @@ public class ReservationValidatorTest {
         reservation1.setStartTime(START_TIME_1);
         reservation1.setEndTime(END_TIME_1);
 
-        ArrayList<Reservation> reservations = new ArrayList<>();
+        reservations = new ArrayList<>();
         reservations.add(reservation1);
 
         reservationValidator = new ReservationValidator(blockRepository, reservationRepository);
@@ -138,5 +140,25 @@ public class ReservationValidatorTest {
         reservationValidator.validate(reservation1, errors);
         verify(errors, never()).rejectValue(anyString(), anyString(), anyString());
     }
+
+    @Test
+    public void validateRejectsWhenThereIsNoUnusedCapacity() {
+        Reservation reservation2 = new Reservation();
+        reservation2.setEmail("Henrietta@example.com");
+        reservation2.setName("Henrietta Zamora");
+        reservation2.setStartTime(START_TIME_1);
+        reservation2.setEndTime(END_TIME_1);
+        reservations.add(reservation2);
+
+        Reservation reservation3 = new Reservation();
+        reservation3.setEmail("Barbara@example.com");
+        reservation3.setName("Barbara Wong");
+        reservation3.setStartTime(START_TIME_1);
+        reservation3.setEndTime(END_TIME_1);
+        when(errors.hasErrors()).thenReturn(false).thenReturn(false);
+        reservationValidator.validate(reservation3, errors);
+        verify(errors).rejectValue("startTime", "startTime.unavailable", "We are already at capacity of 2");
+    }
+
 
 }

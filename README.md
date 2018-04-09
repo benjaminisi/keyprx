@@ -95,9 +95,14 @@ curl http://localhost:8087/api/...
 ```
 ##  Running Automated Tests
 
-The unit tests are runnable in the IDE (I use IntelliJ).   Find them under src/test/unit/java.  They were helpful in correcting my interpreation of the challenge.  
+Run the unit tests that use an in-memory database.  Spring starts for each test class; combining would speed these up.
+```
+cd <checkout directory>
+./gradlew test -i
+```
+The unit tests are also runnable in the IDE (I use IntelliJ).   Find them under src/test/unit/java.  They were helpful in correcting my interpretation of the challenge.  
 
-Given more time, I would supply the command line invocation of the unit tests that run without attempting to connect to the Postgres database.   I would also supply integration/functional automated tests.
+Given more time, I would supply integration/functional automated tests.   I like Spock with Geb/Selenium with Cucumber/RSpec a close runner-up.
 
 ## Algorithm notes
 

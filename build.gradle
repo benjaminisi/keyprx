@@ -24,6 +24,18 @@ apply plugin: 'io.spring.dependency-management'
 
 group = 'com.dbenjamin'
 version = '1.0.0'
+
+
+sourceSets {
+	main.java.srcDir "src/main/java"
+	main.resources.srcDir "src/main/resources"
+	test.java.srcDir "src/test/unit/java"
+	test.resources.srcDir "src/test/unit/resources"
+}
+
+// always run the tests.  Note that combining the tests would make them much faster (just one Spring startup)
+test.outputs.upToDateWhen {false}
+
 /*
 
 springBoot {
@@ -71,6 +83,7 @@ dependencies {
 task wrapper(type: Wrapper) {
 	gradleVersion = '4.5.1'
 }
+/*
 
 tasks.withType(Test) {
     maxHeapSize = "1g"
@@ -79,6 +92,7 @@ tasks.withType(Test) {
         exceptionFormat = 'full'
     }
 }
+*/
 
 tasks.withType(GroovyCompile) {
     groovyOptions.forkOptions.memoryMaximumSize = '256m'
