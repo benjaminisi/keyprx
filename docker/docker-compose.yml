@@ -1,4 +1,4 @@
-version: "3"
+version: "2"
 services:
   db:
     # replace username/repo:tag with your name and image details
@@ -39,4 +39,3 @@ services:
       - webnet1
 networks:
   webnet1:
-    internal: false
